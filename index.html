@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNI Program Plan Theme Evolution 2015–2020</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7f6f2;
+    --bg-tertiary: #f0efe9;
+    --text-primary: #1a1a18;
+    --text-secondary: #5c5b56;
+    --text-tertiary: #8c8b84;
+    --border-light: rgba(0,0,0,0.10);
+    --border-mid: rgba(0,0,0,0.18);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #1e1e1c;
+      --bg-secondary: #272725;
+      --bg-tertiary: #2e2e2b;
+      --text-primary: #e8e6df;
+      --text-secondary: #a09e97;
+      --text-tertiary: #6e6d67;
+      --border-light: rgba(255,255,255,0.08);
+      --border-mid: rgba(255,255,255,0.15);
+    }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 40px 24px 60px;
+  }
+
+  .page { max-width: 900px; margin: 0 auto; }
+
+  header { margin-bottom: 32px; }
+
+  .org-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .subtitle { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+  .card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .year-header {
+    display: grid;
+    grid-template-columns: 200px repeat(4, 120px);
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 0 2px;
+  }
+
+  .yh {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: center;
+    letter-spacing: .04em;
+    padding: 4px 0 8px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 4px 0 14px;
+    padding-left: 208px;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  .leg-item { display: flex; align-items: center; gap: 5px; }
+  .leg-sw { width: 24px; height: 9px; border-radius: 2px; }
+
+  .hint {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin-bottom: 12px;
+    padding-left: 208px;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 200px repeat(4, 120px);
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: stretch;
+  }
+
+  .theme-lbl {
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+    line-height: 1.4;
+    cursor: default;
+  }
+
+  .cell {
+    width: 120px;
+    height: 68px;
+    border-radius: var(--radius-md);
+    padding: 10px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    transition: border-color .12s, filter .12s, transform .1s;
+  }
+
+  .cell:hover { filter: brightness(.95); transform: scale(1.01); }
+  .cell:focus { outline: 2px solid #185FA5; outline-offset: 2px; }
+  .cell.active { border-color: #185FA5 !important; }
+
+  .i1 .cell { background: #E6F1FB; border-color: #B5D4F4; }
+  .i2 .cell { background: #85B7EB; border-color: #378ADD; }
+  .i3 .cell { background: #185FA5; border-color: #0C447C; }
+
+  .pill {
+    font-size: 10px;
+    font-weight: 500;
+    border-radius: 4px;
+    padding: 2px 7px;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  .i1 .pill { background: #B5D4F4; color: #042C53; }
+  .i2 .pill { background: #378ADD; color: #E6F1FB; }
+  .i3 .pill { background: #0C447C; color: #B5D4F4; }
+
+  .detail-area {
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-top: 8px;
+    transition: all .15s;
+  }
+
+  .detail-area.empty {
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
+  }
+
+  .detail-inner { padding: 1.25rem 1.5rem; }
+
+  .d-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .d-theme { font-size: 11px; font-weight: 500; color: var(--text-secondary); letter-spacing: .04em; }
+  .d-sep { color: var(--border-mid); font-size: 14px; }
+  .d-year { font-size: 11px; font-weight: 500; color: var(--text-secondary); }
+
+  .d-tag {
+    font-size: 10px;
+    font-weight: 500;
+    border-radius: 4px;
+    padding: 2px 8px;
+    line-height: 1.5;
+  }
+
+  .d-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+
+  .d-body { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .d-body strong { color: var(--text-primary); font-weight: 500; }
+
+  footer {
+    margin-top: 32px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 720px) {
+    .year-header, .row { grid-template-columns: 140px repeat(4, 1fr); }
+    .legend, .hint { padding-left: 148px; }
+    .cell { width: 100%; height: 68px; }
+    .theme-lbl { font-size: 11px; }
+    h1 { font-size: 18px; }
+    body { padding: 24px 16px 48px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="org-label">Coalition for Networked Information</div>
+    <h1>Program Plan Theme Evolution 2015–2020</h1>
+    <p class="subtitle">Seven cross-cutting themes traced across four program years. Click any cell to reveal details.</p>
+  </header>
+
+  <div class="card">
+    <div class="year-header">
+      <div></div>
+      <div class="yh">2015–16</div>
+      <div class="yh">2017–18</div>
+      <div class="yh">2018–19</div>
+      <div class="yh">2019–20</div>
+    </div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-sw" style="background:#E6F1FB;border:0.5px solid #B5D4F4"></div>emerging / tracked</div>
+      <div class="leg-item"><div class="leg-sw" style="background:#85B7EB;border:0.5px solid #378ADD"></div>active focus</div>
+      <div class="leg-item"><div class="leg-sw" style="background:#185FA5"></div>landmark / crisis-level</div>
+    </div>
+    <div class="hint">Click any cell to reveal details</div>
+    <div id="grid"></div>
+    <div class="detail-area empty" id="detail">
+      <span style="font-size:13px;color:var(--text-tertiary);font-style:italic">Select a cell above to see details for that theme and year.</span>
+    </div>
+  </div>
+
+  <footer>
+    Synthesized from CNI Introduction &amp; Program Plans 2015–16, 2017–18, 2018–19, and 2019–20 &nbsp;·&nbsp; For internal workshop use
+  </footer>
+
+</div>
+
+<script>
+const THEMES = [
+  {
+    label: "Digital preservation\n& scholarly record",
+    cells: [
+      { i: 2, pill: "Active focus", y: "2015–16",
+        title: "Preservation as social and public policy challenge",
+        body: "CNI framed digital preservation not just as a technical task but as a <strong>fundamental social and public policy challenge</strong> with wide-reaching implications. Focus areas included risk management for cloud storage, the growing range of materials that constitute the cultural record, and government information on the web. CNI co-chaired IDCC 11 in Amsterdam." },
+      { i: 3, pill: "Landmark", y: "2017–18",
+        title: "Evidence for scholarship reaches 'crisis proportions'",
+        body: "For the first time, CNI <strong>elevated 'evidence to support scholarship' as an explicit programmatic theme</strong>, naming the situation as reaching crisis proportions. Preserving born-digital news, digital books, music, video, and social media were all called out. Emulation and containerization technology also identified as newly viable and significant." },
+      { i: 3, pill: "Landmark", y: "2018–19",
+        title: "Declaration of Shared Values signed; deepfakes named as new threat",
+        body: "CNI signed the <strong>Digital Preservation Declaration of Shared Values</strong> (December 2017). A new provenance threat emerged: the ease with which persuasive audio and video fabrications can be manufactured, with implications for content description and scholarly records. Emulation and containerization confirmed as a mature approach." },
+      { i: 3, pill: "Landmark", y: "2019–20",
+        title: "Community collaboration sought; crisis framing sustained",
+        body: "CNI worked closely with CLIR Presidential Fellow Carol Mandel to explore <strong>community collaboration strategies for the preservation crisis</strong>. The full range of challenges — preserving news, books, music, social media, personalized services — remained prominent. Personal digital archiving conference collaboration also continued." }
+    ]
+  },
+  {
+    label: "Institutional repositories:\nstrategy & reassessment",
+    cells: [
+      { i: 2, pill: "Active focus", y: "2015–16",
+        title: "Platforms multiplied; costs clearer; re-examination called for",
+        body: "IRs entered their second decade. CNI noted that <strong>platform alternatives have multiplied and matured</strong>, costs and barriers to deployment are better understood, and deployment trajectories differ significantly across nations. The program plan explicitly called for a focused, ongoing re-examination and re-assessment of IR services." },
+      { i: 3, pill: "Landmark", y: "2017–18",
+        title: "Widely-read roundtable report reshapes member strategies",
+        body: "Following two sessions of a Spring 2017 Executive Roundtable, CNI issued a <strong>widely-read report on rethinking IR strategies</strong> that assisted members in their own institutional analyses. The report moved the conversation from broad advocacy to structured documentation of successes, strains, and divergences from original expectations." },
+      { i: 2, pill: "Active focus", y: "2018–19",
+        title: "IRs and faculty mobility, virtual organizations, retirements",
+        body: "CNI's IR focus shifted toward <strong>specific interaction effects</strong>: how IRs interact with faculty movement between institutions, virtual organizations, and stewardship of scholarly work associated with faculty retirements. The SHARE program and parallel international developments were creating new demands for interoperability." },
+      { i: 2, pill: "Active focus", y: "2019–20",
+        title: "Platform maturation continues; funder frameworks complicate",
+        body: "Platform alternatives — including commercial and nonprofit repository services — continued to multiply. <strong>Funder-defined data management frameworks</strong> were creating new policy issues and interoperability requirements. CNI maintained interest in how IRs interact with virtual organizations and individual faculty careers." }
+    ]
+  },
+  {
+    label: "Digital scholarship centers:\nfrom emerging to mainstream",
+    cells: [
+      { i: 2, pill: "Active focus", y: "2015–16",
+        title: "Two workshops done; spring 2016 conference planned",
+        body: "CNI had completed workshops in spring 2014 and spring 2015 exploring digital scholarship centers. A key tension emerged: <strong>centers supporting the entire campus versus faculty-sponsored centers</strong> limited to specific research activities. A spring 2016 conference co-sponsored with ARL was planned to help institutions with planning." },
+      { i: 3, pill: "Landmark", y: "2017–18",
+        title: "Brown workshop oversubscribed; scaling becomes the challenge",
+        body: "The Digital Scholarship Planning Workshop at Brown University (November 2017) was <strong>oversubscribed</strong>, signaling that the topic had become a mainstream institutional concern. CNI's focus shifted from 'what is a digital scholarship center' to 'how do institutions develop partnerships and services at scale,' particularly for humanities faculty." },
+      { i: 2, pill: "Active focus", y: "2018–19",
+        title: "Third workshop; innovation and partnership framed together",
+        body: "A third workshop was planned for Northeastern University in March 2019. CNI also co-sponsored the ARL-CNI Fall Forum <strong>'Innovation in Research Libraries'</strong> in September 2018, framing innovation and partnerships as essential components of digital scholarship work alongside traditional library functions." },
+      { i: 2, pill: "Active focus", y: "2019–20",
+        title: "Fourth workshop; link to broader research enterprise grows",
+        body: "CNI held a fourth well-attended workshop and participated in the 'Critical Roles for Libraries in the Research Enterprise Symposium.' The frame expanded: <strong>digital scholarship centers were increasingly understood as part of the research enterprise</strong>, not just a library service, with University of Calgary Mellon-funded research providing new evidence." }
+    ]
+  },
+  {
+    label: "Privacy, analytics\n& data governance",
+    cells: [
+      { i: 2, pill: "Active focus", y: "2015–16",
+        title: "Privacy workshop; reading analytics; HTTP→HTTPS push",
+        body: "A March 2015 one-day workshop re-assessed technology to support user privacy in networked information services. Key areas: the principle that users should have <strong>reasonable expectations of privacy</strong>, migration from HTTP to HTTPS, contractual best practices in licensing, and 'reading analytics' in e-textbooks as a specific concern." },
+      { i: 2, pill: "Active focus", y: "2017–18",
+        title: "First Monday article on reading analytics; member survey released",
+        body: "A major <strong>First Monday article (April 2017)</strong> explored the rise of reading analytics and reader privacy in the digital world. CNI also released results of a member survey on privacy practices in licensed external content resources (August 2016), and began exploring attribute-based authorization and its policy implications." },
+      { i: 3, pill: "Landmark", y: "2018–19",
+        title: "Deepfakes; data governance enters the collaboration frame",
+        body: "Privacy expanded in scope: a new concern was the manufacture of <strong>persuasive audio and video fabrications ('deepfakes')</strong> and their implications for provenance documentation. The 'Refreshing the Collaboration' roundtables also brought institutional privacy policy and data governance into the library-IT collaboration frame for the first time." },
+      { i: 3, pill: "Landmark", y: "2019–20",
+        title: "Student privacy roundtable; RA21; data governance convening",
+        body: "Student privacy and data governance was named as the <strong>fourth 'Refreshing the Collaboration' roundtable theme</strong>. Reader privacy was identified as a key ongoing focus area. CNI was also engaged with IMLS-sponsored projects and InCommon/RA21 initiatives, and a second article appeared in Research Library Issues in 2019." }
+    ]
+  },
+  {
+    label: "Library–IT collaboration:\nrefreshing the partnership",
+    cells: [
+      { i: 1, pill: "Emerging / tracked", y: "2015–16",
+        title: "Partnership assumed; new voices added at the periphery",
+        body: "Library-IT collaboration remained the assumed foundation of CNI's work. The program plan noted efforts to <strong>extend the core collaboration</strong> to encompass instructional technologists, archivists, data scientists, and research managers — but the partnership itself was not questioned, only expanded at its edges." },
+      { i: 1, pill: "Emerging / tracked", y: "2017–18",
+        title: "Partnership extended to museums and archives; not questioned",
+        body: "The collaboration was extended to new partners, particularly campus museums, following the January 2016 convening with the Kress and Mellon Foundations and ARL. An Executive Roundtable in Fall 2017 followed. The partnership itself was still <strong>not structurally questioned</strong> — it was being enriched, not re-examined." },
+      { i: 3, pill: "Landmark", y: "2018–19",
+        title: "'Refreshing the Collaboration' formally launched",
+        body: "CNI launched a landmark initiative: small invitational roundtables to <strong>explicitly re-assess priorities for library-IT collaboration</strong> in a changed campus environment. The plan acknowledged that a generational shift in leadership is now largely complete and that the 1990 model needs updating. Research administration identified as a missing partner." },
+      { i: 3, pill: "Landmark", y: "2019–20",
+        title: "Four roundtables complete; findings shape future programs",
+        body: "All four roundtables — broad landscape, teaching and learning, research enterprise, privacy and data governance — were completed. CNI was in <strong>dissemination and synthesis mode</strong>, including a featured EDUCAUSE session, fall CNI meeting session, and ARL webinar. Outcomes expected to 'significantly influence' future CNI programming." }
+    ]
+  },
+  {
+    label: "Values, ethics,\ndiversity & inclusion",
+    cells: [
+      { i: 1, pill: "Emerging / tracked", y: "2015–16",
+        title: "DEI present via CLIR and ARL fellowships; not in plan content",
+        body: "CNI's DEI commitment was expressed primarily through contributions to <strong>external programs</strong>: the CLIR Postdoctoral Fellows program and the ARL Leadership Fellows program. The Program Plan's content themes did not yet explicitly incorporate diversity, equity, and inclusion as a lens for the work itself." },
+      { i: 1, pill: "Emerging / tracked", y: "2017–18",
+        title: "Fellowship contributions continue; not yet in plan content",
+        body: "CNI continued its contributions to CLIR and ARL fellowships. The program plan's content themes — preservation, IRs, digital scholarship — were not yet <strong>explicitly reframed through a DEI lens</strong>. This would begin to change in the following year as values language entered the plan for the first time." },
+      { i: 2, pill: "Active focus", y: "2018–19",
+        title: "Values, ethics, DEI explicitly named in the Program Plan",
+        body: "For the first time, the Program Plan included an explicit statement that CNI is <strong>'strongly committed to addressing issues of values, ethics, diversity, and inclusion throughout its work.'</strong> Specific contexts named: documentation of underrepresented communities, metadata language, machine learning for decision-making, and student data privacy." },
+      { i: 3, pill: "Landmark", y: "2019–20",
+        title: "Right to be forgotten, accessibility, LCDP support added",
+        body: "The commitment deepened with new specifics: the <strong>right to be forgotten vs. integrity of the historical record</strong>, accessibility in content and information systems, documentation of 'traditionally undocumented or poorly documented communities,' and explicit support for ARL's Leadership and Career Development Program (LCDP) focused on people of color." }
+    ]
+  },
+  {
+    label: "Emerging technologies:\ntracking to horizon scanning",
+    cells: [
+      { i: 1, pill: "Emerging / tracked", y: "2015–16",
+        title: "Mobile devices, 3-D printing, linked data, annotation tracked",
+        body: "CNI tracked specific technologies and their deployment challenges: mobile device proliferation, 3-D printing, linked data, and annotation. AR and VR were not yet named. The approach was <strong>reactive and issue-specific</strong> rather than systematic horizon scanning — tracking what had already arrived, not forecasting what was coming." },
+      { i: 2, pill: "Active focus", y: "2017–18",
+        title: "Machine learning, quantum computing, 5G on the radar",
+        body: "Machine learning and 'artificial intelligence' (flagged as often <strong>a misnomer</strong>) joined the tracking list alongside quantum computing, 5G wireless deployment, and cryptographic infrastructure. AR and VR entered libraries. The plan noted these have 'longer-term but very high impact' implications — the first sign of horizon-scanning thinking." },
+      { i: 2, pill: "Active focus", y: "2018–19",
+        title: "Deepfakes as new category; resilience and security elevated",
+        body: "Deepfakes joined the tracking list as a distinct new category — not just a technology to watch but <strong>a specific threat to provenance and scholarly integrity</strong>. Security, resilience, and 5G also received elevated attention. AR and VR were now actively incorporated into library facilities at many member institutions." },
+      { i: 3, pill: "Landmark", y: "2019–20",
+        title: "Formal ARL and EDUCAUSE horizon-scanning partnership launched",
+        body: "CNI entered a formal partnership with ARL and EDUCAUSE to <strong>develop and vet a list of highest-impact technologies for research libraries over a 5–10 year horizon</strong>. Initial documents expected early 2020, to be discussed at ELI, the CNI spring meeting, and the ARL meeting. A later phase would focus on institutional transformation strategies." }
+    ]
+  }
+];
+
+const ISTYLE = [
+  { bg:"#E6F1FB", border:"#B5D4F4", pill_bg:"#B5D4F4", pill_txt:"#042C53", tag_bg:"#B5D4F4", tag_txt:"#042C53" },
+  { bg:"#85B7EB", border:"#378ADD", pill_bg:"#378ADD", pill_txt:"#E6F1FB", tag_bg:"#378ADD", tag_txt:"#E6F1FB" },
+  { bg:"#185FA5", border:"#0C447C", pill_bg:"#0C447C", pill_txt:"#B5D4F4", tag_bg:"#0C447C", tag_txt:"#B5D4F4" }
+];
+
+let activeKey = null;
+
+function build() {
+  const grid = document.getElementById("grid");
+  THEMES.forEach((th, ti) => {
+    const row = document.createElement("div");
+    row.className = "row";
+    const lbl = document.createElement("div");
+    lbl.className = "theme-lbl";
+    lbl.innerHTML = th.label.replace("\n", "<br>");
+    row.appendChild(lbl);
+    th.cells.forEach((cell, ci) => {
+      const s = ISTYLE[cell.i - 1];
+      const wrap = document.createElement("div");
+      wrap.className = `i${cell.i}`;
+      const div = document.createElement("div");
+      div.className = "cell";
+      div.tabIndex = 0;
+      div.setAttribute("role", "button");
+      div.setAttribute("aria-pressed", "false");
+      div.setAttribute("aria-label", `${th.label.replace("\n"," ")}, ${cell.y}: ${cell.pill}`);
+      const pill = document.createElement("span");
+      pill.className = "pill";
+      pill.textContent = cell.pill;
+      div.appendChild(pill);
+      const handler = () => select(ti, ci, div, s, cell, th.label);
+      div.addEventListener("click", handler);
+      div.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handler(); }
+      });
+      wrap.appendChild(div);
+      row.appendChild(wrap);
+    });
+    grid.appendChild(row);
+  });
+}
+
+function select(ti, ci, el, s, cell, themeLabel) {
+  const key = `${ti}-${ci}`;
+  document.querySelectorAll(".cell").forEach(c => {
+    c.classList.remove("active");
+    c.setAttribute("aria-pressed", "false");
+  });
+  if (activeKey === key) { activeKey = null; showEmpty(); return; }
+  activeKey = key;
+  el.classList.add("active");
+  el.setAttribute("aria-pressed", "true");
+  const panel = document.getElementById("detail");
+  panel.classList.remove("empty");
+  panel.innerHTML = `<div class="detail-inner">
+    <div class="d-meta">
+      <span class="d-theme">${themeLabel.replace("\n", " ")}</span>
+      <span class="d-sep">·</span>
+      <span class="d-year">${cell.y}</span>
+      <span class="d-tag" style="background:${s.tag_bg};color:${s.tag_txt}">${cell.pill}</span>
+    </div>
+    <div class="d-title">${cell.title}</div>
+    <div class="d-body">${cell.body}</div>
+  </div>`;
+}
+
+function showEmpty() {
+  const panel = document.getElementById("detail");
+  panel.classList.add("empty");
+  panel.innerHTML = `<span style="font-size:13px;color:var(--text-tertiary);font-style:italic">Select a cell above to see details for that theme and year.</span>`;
+}
+
+build();
+</script>
+</body>
+</html>
